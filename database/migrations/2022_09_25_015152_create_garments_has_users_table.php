@@ -13,13 +13,27 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('garments_has_users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('password');
+			$table->bigInteger('garment_id')->unsigned();
+			$table->bigInteger('user_id')->unsigned();
+			$table->date('date_loan');
+			$table->date('date_return');
             $table->timestamps();
 			$table->softDeletes();
+
+			$table->foreign('garment_id')
+			->references('id')
+			->on('garments')
+			->onDelete('cascade');
+
+			$table->foreign('user_id')
+			->references('id')
+            ->on('users')
+			->onDelete('cascade');
+
+
+
         });
     }
 
@@ -30,6 +44,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('garments_has_users');
     }
 };
